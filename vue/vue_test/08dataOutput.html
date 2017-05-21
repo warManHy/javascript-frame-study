@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>模板</title>
+	<script src="http://cdn.jsdelivr.net/vue/1.0.7/vue.min.js"></script>	
+</head>
+<style>
+	span{margin-right:30px;}
+</style>
+<body>
+	<div class="app">
+		<p><span>双向绑定{{msg}}</span>{{msg}}</p>
+		<input type="text" v-model="msg">
+		<p><span>只有一次绑定</span>{{*msg}}</p>
+		<p><span>不转化成html</span>{{msgHtml}}</p>
+		<p><span>转化成html</span>{{{msgHtml}}}</p>
+	</div>
+	<script>
+		var app = new Vue({
+			el: ".app",
+			data: {
+				msg:"this is a msg!",
+				msgHtml:"<b>this is a msg!</b>"
+			},
+			methods: {
+
+			}
+		});
+	</script>
+</body>
+</html>

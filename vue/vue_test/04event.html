@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>基本事件</title>
+	<script src="http://cdn.jsdelivr.net/vue/1.0.7/vue.min.js"></script>
+</head>
+<style>
+	.parent{padding: 30px;background: #333;}
+	.son{padding: 60px;background: grey;}
+	.son span{background: red;}
+	.moveDiv{padding: 30px;}
+	.smMoveDiv{width: 100px;height: 100px;border:1px solid #774556;position: absolute;}
+</style>
+<script>
+	window.onload=function(){
+		var div = document.getElementsByClassName('smMoveDiv')[0];
+		new Vue({
+			el:".div",
+			data:{
+				eventMsg:"grandson"
+			},
+			methods:{
+				showX:function(ev){
+					alert(ev.clientX)
+				},
+				stopEvent:function(){
+					alert("阻止了a的链接");
+				},
+				upEvent:function(){
+
+					alert(this.eventMsg);
+				},
+				upEventSon:function(){
+					alert("son");
+				},
+				upEventP:function(){
+					alert("parent");
+				},
+				myRightClick:function(){
+					alert("阻止右键了");
+				}
+			}
+		});
+		var keyEvent = new Vue({
+			el:".keyEvent",
+			data:{
+				msgEnter:"enter somethings",
+				left: 30
+			},
+			methods:{
+				down:function(ev){
+					alert(ev.keyCode)
+				},
+				up:function(ev){
+					alert(ev.keyCode)
+				},
+				enter:function(ev){
+					alert("enter")
+				},
+				goRight:function(){
+					this.left > 300 ? this.left =30 : this.left += 30;
+					div.style.left= this.left + "px";
+				}
+			}
+		});
+	};
+</script>
+<body>
+	<div class="div" @contextmenu.prevent="myRightClick()">
+		<input type="button" value="显示鼠标点击的横坐标" @click="showX($event)">
+		<p>
+			<span>阻止默认事件</span>
+			<a href="www.baidu.com" @click.prevent="stopEvent()">百度</a>
+		</p>
+		<p>
+			<span>冒泡事件(点击)</span>
+			<div class="parent" @click="upEventP()">
+				<div class="son" @click="upEventSon()">
+					<span @click="upEvent()">孙子呀 哈哈</span>
+				</div>
+			</div>
+		</p>
+		<p>
+			<span>阻止冒泡事件</span>
+			<div class="parent" @click.stop="upEventP()">
+				<div class="son" @click.stop="upEventSon()">
+					<span @click.stop="upEvent()">孙子呀 哈哈</span>
+				</div>
+			</div>
+		</p>		
+	</div>
+	<div class="keyEvent">
+		<p>键盘事件</p>
+		<label for="">
+			<span>onkeydown</span>
+			<input type="text" @keydown="down">
+		</label>
+		<label for="">
+			<span>onkeyup</span>
+			<input type="text" @keyup="up">
+		</label>		
+		<label for="">
+			<span>enter</span>
+			<input type="text" @keyup.enter="enter" v-model="msgEnter">
+		</label>			
+		<div class="moveDiv">
+			<input type="text"  @keyup.right="goRight" value="向右按键按钮">
+			<span>@keyup[ up,down,left,right ]</span>
+			<div class="smMoveDiv"></div>
+		</div>	
+	</div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>hello react</title>
+	 <script src="./build/react.js"></script>
+    <script src="./build/react-dom.js"></script>
+    <script src="./build/browser.min.js"></script>
+</head>
+<body>
+	<div id="example"></div>
+	<script type="text/babel">
+		var HelloMessage = React.createClass({
+			render: function(){
+				return <h1>Hello {this.props.name}</h1>
+			}
+		});
+	
+		/*
+		React.createClass
+		自定义组件HelloMessage，并渲染使用
+		组件名必须为大写！
+		 */
+		ReactDOM.render(
+			<HelloMessage name="John" />,
+			document.getElementById('example')
+		);
+		
+	</script>
+</body>
+</html>

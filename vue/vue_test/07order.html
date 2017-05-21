@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vue基本的指令</title>
+	<script src="http://cdn.jsdelivr.net/vue/1.0.7/vue.min.js"></script>
+</head>
+<style>
+	span{background: #333;color: #fff;}
+	.app1{max-width:500px;float: left;}
+	.app2{max-width:500px;float: left;}
+	.red{background: red;}
+	.itemLi{width: 100px;background-color: #333;color: #fff;}
+	.spanClass{width: 100px;background: #774232;color: #fff;display: block;}
+</style>
+<body>
+	<div class="app1">
+		<label for="">
+			<span>name:</span>
+			<input type="button" v-on:click="changeName()" value="changeName">
+			<input type="button" v-on:click="showName()" value="showName">
+			<p v-html="name"></p>
+			<p><span>computed计算出来的值：</span>{{newName}}</p>
+		</label>
+		<label for="">
+			<span>age: 使用v-model</span>
+			<input type="text" v-model="age">
+			<p v-text="age"></p>
+		</label>
+		<label for="">
+			<span>sex:  1.v-if 通过判断真假渲染模板  2.v-show不管如何都会渲染，通过display显示影藏</span>
+			<!-- v-if 通过判断真假渲染模板  -->
+			<p v-text="sex" v-if="2>1"></p>
+			<p v-text="sex" v-show="no"></p>
+		</label>
+		<label for="">
+			<span>grade:</span>
+			<span>使用v-html渲染出来的</span>
+			<p v-html="grade"></p>
+		</label>
+		<div class="div">
+			<p>使用v-bind显示img的src</p>
+			<img v-bind:src="imgSrc" alt="">			
+			<p>使用v-bind显示img的style</p>
+			<img :style="{background:'#333'}" alt="" :src="imgSrc">	
+			<p>使用v-bind显示img的class</p>
+			<img :class="{ red:isRed }" alt="" :src="imgSrc">				
+		</div>
+	</div>
+	<script>
+		var app1 = new Vue({
+			el: ".app1",
+			data: {
+				name: "warmanhy",
+				age:  21,
+				sex: "male",
+				grade: "<b>大三</b>",
+				isRed: true,
+				imgSrc:"https://cn.vuejs.org/images/logo.png"
+			},
+			methods: {
+				changeName: function(){
+					alert(this.name.split("").reverse().join("")); 
+					//这里对于data中的值没有修改，相当于复制一个副本使用
+					return this.name.split("").reverse().join("");
+				},
+				showName: function(){
+					//这里显示的data值还是原来的值
+					alert(this.name)
+				}
+			},
+			computed: {
+				newName: function(){
+					return this.name.split("").reverse().join("+");
+				}
+			}
+		});
+	</script>
+	<div class="app2">
+		<ul v-for="item in arrList">
+			<li v-on:mouseover="itemHover($index)" :class="[liClass]">{{ item }}</li>
+			<span v-if="showItem" :class="[spanClass]">{{itemHover($index)}}</span>
+		</ul>
+	</div>
+	<script>
+	
+		var app2 = new Vue({
+			el: ".app2",
+			data: {
+				arrList: [1,2,3,4,5,6,7,8,9],
+				liClass: "itemLi",
+				spanClass: "spanClass",
+				showItem: false
+			},
+			methods: {
+				itemHover:function(t){
+					console.log(t)
+					this.showItem = true;
+					return this.arrList[t] ; 
+				}
+			}
+		});
+	</script>
+</body>
+</html>
