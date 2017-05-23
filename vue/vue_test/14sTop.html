@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>子组件到父组件(自定义事件)</title>
+	<script src="http://cdn.jsdelivr.net/vue/2.0/vue.min.js"></script>
+</head>
+<style>
+	pre{background: #444;color: #ff1;font-family: cursive;font-weight: bolder;}
+</style>
+<body>
+	<pre>
+		我们可以使用props将父组件的数据传递给子组件，接下来就是如何把子组件的数据传递给父组件
+		因此我们使用自定义事件 
+			@1. $on(eventName) 监听事件 监听子组件抛出的事件，要在模板里使用v-on绑定
+			@2. $emit(eventName) 触发事件
+	</pre>
+	<div class="app1">
+		<p> {{total}} </p>
+		<button-counter v-on:add="incrementTotal"></button-counter> 
+		<button-counter v-on:add="incrementTotal"></button-counter> 
+	</div>
+	<pre>
+		点击一个触发了add函数，counter+1
+		由于 this.$emit('add') ---> v-on:add="incrementTotal"
+		incrementTotal为父组件的方法
+		<br>
+		Vue.component('button-counter',{
+			template: ' &ltbutton v-on:click="add"&gt{{counter}}&lt/button&gt ',
+			data: function(){
+				return {
+					counter: 0
+				}
+			},
+			methods:{
+				add: function(){
+					this.counter += 1
+					this.$emit('add')
+				}
+			}
+		})
+		new Vue({
+			el:'.app1',
+			data:{
+				total: 0
+			},
+			methods:{
+				incrementTotal: function(){
+					this.total += 1
+				}
+			}
+		})			
+	</pre>
+</body>
+<script>
+	Vue.component('button-counter',{
+		template: ' <button v-on:click="add">{{counter}}</button> ',
+		data: function(){
+			return {
+				counter: 0
+			}
+		},
+		methods:{
+			add: function(){
+				this.counter += 1
+				this.$emit('add')
+			}
+		}
+	})
+	new Vue({
+		el:'.app1',
+		data:{
+			total: 0
+		},
+		methods:{
+			incrementTotal: function(){
+				this.total += 1
+			}
+		}
+	})
+</script>
+</html>

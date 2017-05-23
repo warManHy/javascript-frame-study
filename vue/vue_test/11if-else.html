@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>使用条件渲染</title>
+<!-- 	<script src="http://cdn.jsdelivr.net/vue/1.0.7/vue.min.js"></script> -->
+	<script src="http://cdn.jsdelivr.net/vue/2.1/vue.min.js"></script>	
+</head>
+<style>
+	*{margin: 0;padding: 0;}
+	body{background: #488;color: #fff;padding: 20px 0 20px 100px;}
+	h3{color:yellow;}
+	pre{background: #333;color: #fff;font-size: 16px;font-family: cursive;}
+	.aClass{height: 30px;display: inline-block;background: #333;margin-left: 10px;text-align: center;line-height: 30px;cursor: pointer;}
+</style>
+<body>
+	<div class="container">
+		<div class="if">
+			<h3>1.v-if的使用</h3>
+			<div class="app1">
+				<p v-if="ok">one</p>
+				<p v-if="no">two</p>
+				<p v-if="ok">three</p>
+			</div>
+			<pre>
+HTML:
+&ltdiv class="app1"&gt
+	&ltp v-if="ok">one&lt/p&gt
+	&ltp v-if="no">two&lt/p&gt
+	&ltp v-if="ok">three&lt/p&gt
+&lt/div&gt
+
+JS:
+var app1 = new Vue({
+	el:".app1",
+	data:{
+		ok: true,
+		no: false
+	}
+});				
+			</pre>
+		</div>
+		<div class="else">
+			<h3>2.v-else的使用</h3>
+			<div class="app2">
+				<p v-if="no">else one</p>
+				<p v-else>else two</p>
+				<p v-if="ok">else three</p>
+				<p><button @click="randomFn()">点击随机数,大于0.5多显示一条数据</button></p>
+				<p><span>随机数</span>{{randomNum}}</p>
+				<p v-if="randomNum>0.5">{{ randomNum }}</p>
+			</div>
+<pre>
+HTML:
+&ltdiv class="app2"&gt
+	&ltp v-if="no"&gtelse one&lt/p&gt
+	&ltp v-else&gtelse two&lt/p&gt
+	&ltp v-if="ok"&gtelse three&lt/p&gt
+	&ltp&gt&ltbutton @click="randomFn()"&gt点击随机数,大于0.5多显示一条数据&lt/button&gt&lt/p&gt
+	&ltp&gt&ltspan&gt随机数&lt/span&gt{{randomNum}}&lt/p&gt
+	&ltp v-if="randomNum&gt0.5"&gt{{ randomNum }}&lt/p&gt
+&lt/div&gt
+
+JS:
+var app2 = new Vue({
+	el:".app2",
+	data:{
+		ok:true,
+		no:false,
+		randomNum:""
+	},
+	methods: {
+		randomFn:function(){
+			this.randomNum = Math.random();
+		}
+	}
+});
+</pre>
+		</div>
+		<div class="else-if">
+			<h3>3.v-else-if的使用(Vue2.1以后)</h3>
+			<div class="app3">
+				<input type="text" v-model="type" placeholder="输入1或2或3或4或其他">
+				<p v-if="type==='1' ">A</p>
+				<p v-else-if="type==='2' ">B</p>
+				<p v-else-if="type==='3' ">C</p>
+				<p v-else>NOt A,B</p>
+			</div>
+<pre>
+HTML:
+&ltdiv class="app3"&gt
+	&ltinput type="text" v-model="type" placeholder="输入1或2或3或4或其他"&gt
+	&ltp v-if="type==='1' "&gtA&lt/p&gt
+	&ltp v-else-if="type==='2' "&gtB&lt/p&gt
+	&ltp v-else-if="type==='3' "&gtC&lt/p&gt
+	&ltp v-else&gtNOt A,B&lt/p&gt
+&lt/div&gt
+
+JS:
+var app3 = new Vue({
+	el:".app3",
+	data:{
+		type:'1'
+	}
+});	
+</pre>
+		</div>
+		<div class="app4">
+			<h3>application1</h3>
+			<template v-if="useType==='UserName' ">
+				<label for="">UserName</label>
+				<input type="text" placeholder="UserName">
+			</template> 	
+			<template v-else>
+				<label for="">emailName</label>
+				<input type="text" placeholder="emailName">				
+			</template>
+			<input type="button" @click="toggle()" value="toggle">
+			<p>我们在切换的时候，如果已经输入值不会改变</p>
+		</div>
+		<div class="app5">
+			<h3>application2</h3>
+			<template v-if="useType==='UserName' ">
+				<label for="">UserName</label>
+				<input type="text" placeholder="UserName" key="UserName-input">
+			</template> 	
+			<template v-else>
+				<label for="">emailName</label>
+				<input type="text" placeholder="emailName" key="emailName-input">				
+			</template>
+			<input type="button" @click="toggle()" value="toggle">
+			<p>使用了key值可以清空已经输入值</p>
+		</div>
+		<div class="app6">
+			<h3>application3</h3>
+			<div class="page">
+				<template v-for="item in arr">
+					<a :class="[aCls]" v-if="item==1">首页</a>
+					<a :class="[aCls]" v-if="item==1">{{item}}</a>
+					<a :class="[aCls]" v-if="item==1">...</a>
+					<a :class="[aCls]" v-if="item>2&&item<pageCount-1">{{item}}</a>
+					<a :class="[aCls]" v-if="item==pageCount">...</a>
+					<a :class="[aCls]" v-if="item==pageCount">{{item}}</a>
+					<a :class="[aCls]" v-if="item==pageCount">尾页</a>					
+				</template>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+	var app1 = new Vue({
+		el:".app1",
+		data:{
+			ok: true,
+			no: false
+		}
+	});
+	var app2 = new Vue({
+		el:".app2",
+		data:{
+			ok:true,
+			no:false,
+			randomNum:""
+		},
+		methods: {
+			randomFn:function(){
+				this.randomNum = Math.random();
+			}
+		}
+	});
+	var app3 = new Vue({
+		el:".app3",
+		data:{
+			type:'1'
+		}
+	});
+	var app4 = new Vue({
+		el:".app4",
+		data:{
+			useType: 'UserName'
+		},
+		methods:{
+			toggle: function(){
+				if(this.useType=="UserName"){
+					this.useType = 'emailName' 
+				}else{
+					this.useType="UserName";
+				}
+				console.log(this.useType)
+			}
+		}
+	});
+	var app5 = new Vue({
+		el:".app5",
+		data:{
+			useType: 'UserName'
+		},
+		methods:{
+			toggle: function(){
+				if(this.useType=="UserName"){
+					this.useType = 'emailName' 
+				}else{
+					this.useType="UserName";
+				}
+				console.log(this.useType)
+			}
+		}
+	});
+	var app6 = new Vue({
+		el:".app6",
+		data:{
+			arr: [1,2,3,4,5,6,7,8],
+			aCls: "aClass",
+			pageCount:6
+		},
+		methods:{
+
+		}
+	});
+</script>
+</html>

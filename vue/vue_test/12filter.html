@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>filter</title>
+	<script src="http://cdn.jsdelivr.net/vue/1.0/vue.min.js"></script>	
+</head>
+<body>
+	<div class="app">
+		<h1>Vue1.0有这个api,2.0没有了</h1>
+		{{ "warmanhy" | uppercase }}
+	</div>	
+	<script>
+		new Vue({
+			el:".app",
+			data:{
+				msg: "warmanhy"
+			}
+		});
+	</script>
+</body>
+</html>

@@ -5,7 +5,88 @@
 	<title>观察watch</title>
 	<script src="http://cdn.jsdelivr.net/vue/1.0.7/vue.min.js"></script>	
 </head>
+<style>
+	*{padding: 0;margin: 0;}
+	body{background: #333;color: #fff;}
+	p{background: #eee;color: #343;height: 40px;font-weight:bolder;}
+	.btnClass{background:red;border:1px solid #333;color:yellow;height: 40px;}
+	pre{font-size: 16px;font-family: cursive;}
+</style>
 <body>
-	
+	<div class="app">
+		<p>默认值:{{ msg }}</p>
+		<p>computed: {{computedNewNumber }}</p>
+		<p>methods: {{msgChange() }} </p>
+		<p><button @click="watchMsgChange()" :class="[btnCls]">点击改变msg的值</button></p>
+		<p>{{ watchMsg }}</p>
+	</div>
+	<script>
+		var app = new Vue({
+			el:".app",
+			data: {
+				msg: "this is a wonderful world",
+				btnCls: "btnClass",
+				watchMsg:""
+			},
+			//会根据依赖的值更新，只要依赖的值不变，就不会重新计算，类似
+			computed: {
+				computedNewNumber:function(){
+					var newMsg = this.msg + "  computed";
+					return newMsg;
+				}
+			},
+			//监听data中的变量，一旦有data改变，就会触发这里的事件
+			watch: {
+				msg : function(oldVal,newVal){
+					console.log( " oldVal: " + oldVal , "newVal:" + newVal );
+					this.watchMsg = " oldVal: " + oldVal +"   :  "+"newVal:" + newVal; 
+				}
+			},
+			//这里的计算值会每次都更新
+			methods: {
+				msgChange:function(){
+					var changeMsg = this.msg + "  change";
+					return changeMsg;
+				},
+				watchMsgChange:function(){
+					return this.msg = "this msg has been changed!";
+				}
+			}
+		});
+	</script>
+	<pre>
+		var app = new Vue({
+			el:".app",
+			data: {
+				msg: "this is a wonderful world",
+				btnCls: "btnClass",
+				watchMsg:""
+			},
+			//会根据依赖的值更新，只要依赖的值不变，就不会重新计算，类似
+			computed: {
+				computedNewNumber:function(){
+					var newMsg = this.msg + "  computed";
+					return newMsg;
+				}
+			},
+			//监听data中的变量，一旦有data改变，就会触发这里的事件
+			watch: {
+				msg : function(oldVal,newVal){
+					console.log( " oldVal: " + oldVal , "newVal:" + newVal );
+					this.watchMsg = " oldVal: " + oldVal +"   :  "+"newVal:" + newVal; 
+				}
+			},
+			//这里的计算值会每次都更新
+			methods: {
+				msgChange:function(){
+					var changeMsg = this.msg + "  change";
+					return changeMsg;
+				},
+				watchMsgChange:function(){
+					return this.msg = "this msg has been changed!";
+				}
+			}
+		});		
+	</pre>
 </body>
 </html>

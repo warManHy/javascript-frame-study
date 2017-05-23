@@ -5,7 +5,63 @@
 	<title>计算属性</title>
 	<script src="http://cdn.jsdelivr.net/vue/1.0.7/vue.min.js"></script>
 </head>
+<style>
+	pre{background: #333;color: #fff;font-family: cursive;font-size: 16px;}
+</style>
 <body>
-	
+	<div class="app">
+		<p>默认的值: {{msg}}</p>
+		<p>computed计算出来的: {{computedMsg}}</p>
+		<p>使用methods计算出来的: {{ reverseMsg() }}</p>
+		<p>不是响应式依赖的： {{now}}</p>
+	</div>
+	<script>
+		var app  = new Vue({
+			el:".app",
+			data:{
+				msg:"hello world!"
+			},
+			//根据计算依赖的值计算。只要依赖值不变就不用重新更新计算了（缓存）
+			computed:{
+				computedMsg: function(){
+					return this.msg.split("").reverse().join("");
+				},
+				//但是对于这种实时更新的使用computed会失效，即使不是响应式依赖
+				now: function(){
+					return Date.now();
+				}
+			},
+			//每次渲染都要冲洗计算， 然后得到更新的值
+			methods: {
+				reverseMsg: function(){
+					return this.msg.split("").reverse().join("");
+				}
+			}
+		});
+	</script>
+<pre>
+		var app  = new Vue({
+			el:".app",
+			data:{
+				msg:"hello world!"
+			},
+			//根据计算依赖的值计算。只要依赖值不变就不用重新更新计算了（缓存）
+			computed:{
+				computedMsg: function(){
+					return this.msg.split("").reverse().join("");
+				},
+				//但是对于这种实时更新的使用computed会失效，即使不是响应式依赖
+				now: function(){
+					return Date.now();
+				}
+			},
+			//每次渲染都要冲洗计算， 然后得到更新的值
+			methods: {
+				reverseMsg: function(){
+					return this.msg.split("").reverse().join("");
+				}
+			}
+		});	
+</pre>
 </body>
 </html>

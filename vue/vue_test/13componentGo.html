@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>componentGo--注册组件</title>
+	<script src="http://cdn.jsdelivr.net/vue/2.0/vue.min.js"></script>
+</head>
+<style>
+	*{margin:0;padding: 0;}
+	body{font-family: cursive;padding: 40px ;}
+	pre{background: #333;color: #f1f1f1;font-size: 16px;font-weight:bolder;}
+</style>
+<body>
+	<div class="app">
+		<my-component></my-component>
+	</div>
+<pre>
+HTML：
+&ltdiv class="app"&gt
+	&ltmy-component&gt&lt/my-component&gt
+&lt/div&gt
+
+JS:
+Vue.component('my-component',{
+	template: "&lth1&gt1.注册全局组件&lt/h1&gt"
+});
+new Vue({
+	el: " .app"
+});
+</pre>
+	<div class="app2">
+		<myself-component></myself-component>
+		<show-component></show-component>
+	</div>
+</body>
+<pre>
+HTML:
+&ltdiv class="app2"&gt
+	&ltmyself-component&gt&lt/myself-component&gt
+	&ltshow-component&gt&lt/show-component&gt
+&lt/div&gt
+
+JS:
+var Child = {
+	template: "&lth2&gt2.this is Local component&lt/h2&gt"
+};
+var showChild = {
+	template: "&lth3 :style={color:'red'}&gt局部组件只可以在父组件下使用，即在父组件作用域下，其他作用域不可以使用&lt/h3&gt"
+};
+new Vue({
+	el:'.app2',
+	components:{
+		'myself-component': Child,
+		'show-component': showChild
+	}
+});
+</pre>
+	<div class="app3" v-html="msg">
+		<show-component></show-component>
+	</div>
+<pre>
+HTML:
+&ltdiv class="app3" v-html="msg"&gt
+	&ltshow-component&gt&lt/show-component&gt
+&lt/div&gt
+
+调用了app2的子组件，但是没有渲染，因为app3不是show-component的父组件
+</pre>
+<h3>问题:</h3>
+<pre>
+1.定义了一个子组件，可不可以有多个父组件（测试好像不行）
+例如：
+var Child = {
+	template: "&lth2&gt2.this is Local component&lt/h2&gt"
+};
+我想把他同时挂载在app2和app3中作为子组件，但是不行。。。。？？？
+
+2.我试过将new出来的Vue对象作为一个组件使用，但是不行，组件和Vue实例不一样
+</pre>
+<h3>Dom模板失效问题</h3>
+<table class="table">
+	<tr is="my-row"></tr>
+</table>
+<h3>data必须是函数,console可以看到报错</h3>
+<div class="data">
+	<data-component></data-component>
+	<data-fn></data-fn>
+	<data-fn></data-fn>
+	<data-fn></data-fn>
+</div>
+<script>
+	//data
+	var a = Vue.component('data-component',{
+		template: "<span>{{ msg }}</span>",
+		data:{
+			msg:"hello"
+		}
+	})
+	//data is function
+	var data  = { msg:0 }
+	Vue.component('data-fn',{
+		template:"<button v-on:click='msg += 1'>{{ msg }}</button>",
+		data:function(){
+			return {
+				msg: 0 
+			}
+		}
+	})
+	new Vue({
+		el:'.data'
+	});
+	//table Dom
+	var row = {
+		template: 'use "ol ul select table" ... make Vue dom render nothing!'
+	}
+	new Vue({
+		el: '.table',
+		components:{
+			'my-row': row
+		}
+	});
+	//my
+	Vue.component('my-component',{
+		template: "<h1>1.注册全局组件</h1>"
+	});
+	new Vue({
+		el: " .app"
+	});
+
+	//myself
+	var Child = {
+		template: "<h2>2.this is Local component</h2>"
+	};
+	var showChild = {
+		template: "<h3 :style={color:'red'}>局部组件只可以在父组件下使用，即在父组件作用域下，其他作用域不可以使用</h3>"
+	};
+	new Vue({
+		el:'.app2',
+		components:{
+			'myself-component': Child,
+			'show-component': showChild
+		}
+	});
+	//myself in my
+	new Vue({
+		el: ".app3",
+		data:{
+			msg: "<h2>测试局部组件的作用域</h2>"
+		}
+	});
+</script>
+</html>
