@@ -6,6 +6,49 @@
 	<script src="http://cdn.jsdelivr.net/vue/2.0/vue.min.js"></script>
 </head>
 <body>
-	
+	<h1>简单使用bus</h1>
+	<div id="app4">
+	  <display></display>
+	  <increment></increment>
+	</div>
+	<script>
+		//中转站
+	  var bus = new Vue();
+	  //a组件 触发事件
+	  Vue.component('increment', {
+	    template: `<button @click="add">+</button>`,
+	    data: function () {
+	      return {count: 0}
+	    },
+	    methods: {
+	      add: function () {
+	      	//inc是一个标志符，代表a,b之间交流的钥匙
+	        bus.$emit('inc', this.count+=1)
+	      }
+	    }
+	  });
+	  //b组件 监听事件
+	  Vue.component('display', {
+	    template: `<span>Clicked: <mark>{{c}}</mark> times</span>`,
+	    data: function () {
+	      return {c: 0}
+	    },
+	    created: function () {
+	      var self=this;
+	      //num 是 bus传递过来的值
+	     bus.$on('inc', function (num) {
+	     	console.log(num)
+	       self.c = num
+	     });
+/*	      bus.$on('inc', (num) =>
+	        this.c = num
+	      );*/
+	    }
+	  });
+	  vm = new Vue({
+	    el: "#app4",
+	  })
+	</script>
 </body>
+
 </html>
