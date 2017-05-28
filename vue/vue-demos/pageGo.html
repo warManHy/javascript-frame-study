@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>pageGo</title>
+	<script src="./vue.min.js"></script>
+	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+	<script src="https://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<link href="https://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+	<script src="./test.js"></script>
+</head>
+<style>
+	.btnCls{background: #333;color: #fff;}
+	input{width: 50px;height: 34px;}
+</style>
+<body>
+	<!-- 父子组件 -->
+	<div class="app">
+		<table class="table table-hover table-bordered">
+			<caption>
+				<th>num</th>
+				<th v-for="item in title" class="text-center">{{item}}</th>
+			</caption>
+			<tr v-for="(item,index) in nowList" class="text-center">
+				<!-- 
+					index 
+					可以挂载在函数，方法
+					可以循环的作用域中这样使用 {{index}}			
+				 -->
+				 <td>{{index}}</td>
+				<td v-for="i in item">{{i}}</td>
+			</tr>
+		</table>
+		<page-go v-on:add="computedPage" :msg="allPage"></page-go>
+	</div>
+	
+</body>
+<script>
+	//只负责把nowpage emit app
+	Vue.component('page-go',{
+		template:'<div>\
+		<button @click="add(1)" class="btn btn-default">首页</button>\
+		<button @click="add(-1)" class="btn btn-default">上一页</button>\
+		当前页<button class="btn btn-default btn-primary">{{nowPage}}</button>\
+		<template v-for="(item,index) in msg">\
+		<button class="btn btn-default"  v-if="item==1" @click="add(item)" :class="{btnCls:item==nowPage}">{{item}}</button>\
+		<button class="btn btn-default" :class="{btnCls:item==nowPage}" v-if="midNum==3&&item==2" @click="add(item)">{{item}}</button>\
+		<button class="btn btn-default"  v-if="item==1&&msg>7&&midNum!=3" :style="{cursor:cursorP}">...</button>\
+		<button class="btn btn-default"  :class="{btnCls:item==nowPage}" @click="add(item)" v-if="item>2&&item<msg&&item==mid-1">{{item}}</button>\
+		<button class="btn btn-default"  :class="{btnCls:item==nowPage}" @click="add(item)" v-if="item>1&&item<msg&&item==mid">{{item}}</button>\
+		<button class="btn btn-default" :class="{btnCls:item==nowPage}"  @click="add(item)" v-if="item>1&&item<msg&&item==mid+1">{{item}}</button>\
+		<button class="btn btn-default"  :class="{btnCls:item==nowPage}" @click="add(item)" v-if="item>1&&item<msg&&midNum==3&&item==mid+2">{{item}}</button>\
+		<button class="btn btn-default"  v-if="item==msg-1&&midNum!=msg-3" :style="{cursor:cursorP}">...</button>\
+		<button class="btn btn-default"  :class="{btnCls:item==nowPage}" v-if="midNum==msg-3&&item==msg-1" @click="add(item)">{{item}}</button>\
+		<button class="btn btn-default" :class="{btnCls:item==nowPage}"  @click="add(item)" v-if="item==msg">{{item}}</button>\
+		</template>\
+		<button @click="add(-2)" class="btn btn-default">下一页</button>\
+		<button @click="add(msg)" class="btn btn-default">尾页</button>\
+		</div>\
+		',
+		props:['msg','page'],
+		data: function(){
+			return {
+				nowPage:1,
+				cursorP:"not-allowed",
+				size:7,
+				arr:[],
+				midNum: Math.ceil(this.msg/2)
+			}
+		},
+		computed: {
+			mid: function(){
+				if(this.msg>=this.size){
+					return this.midNum;
+				}else{
+					for(var i in this.msg){
+						this.arr.push(i);
+					}
+				}
+			}
+		},
+		methods:{
+			add: function(num){
+
+				//var nowdiff = this.nowPage-this.midNum;
+				if( num ==-2 ){
+					//nowdiff<=0 ? this.midNum = this.midNum + nowdiff : null;
+					this.nowPage<this.msg ? this.nowPage++ : this.nowPage=this.nowPage;
+
+				}else if( num==-1 ){
+					//nowdiff>=1 ? this.midNum  = this.midNum + nowdiff : null;
+					this.nowPage>1 ? this.nowPage--: this.nowPage=this.nowPage;
+					
+				}else if( num==1 ){
+					this.midNum = 3;
+					this.nowPage=1;
+				}else if(num==this.msg){
+					this.midNum = this.msg-3;
+					this.nowPage = num;
+				}else{
+					this.nowPage=num;
+				}
+
+				//var diff = num-this.mid;
+				if(this.nowPage<=3){	
+					this.midNum = 3;
+				}else if(this.nowPage>=this.msg-3){
+					this.midNum =this.msg-3; 
+				}else{
+					this.midNum = this.nowPage;
+				}
+
+				console.log("this.mid:"+this.mid,"midNum:"+this.midNum,"nowPage:"+this.nowPage)
+				//num>0 ?this.nowPage++: this.nowPage--;
+				this.$emit('add',this.nowPage);
+			}
+		}
+	});
+
+	var app = new Vue({
+		el: ".app",
+		data: {
+			title: test[0],
+			test: test.slice(1),
+			pageSize: 10,
+			nowPage:1
+		},
+		computed: {
+			allPage: function(){
+				return Math.ceil(this.test.length/this.pageSize);
+			},
+			nowList: function(){
+				return this.test.slice( (this.nowPage-1)*this.pageSize,(this.nowPage-1)*this.pageSize+this.pageSize);
+			}
+		},
+		methods: {
+			computedPage:function(msg){
+				this.nowPage=msg;
+			}
+		}
+	});
+
+	/*
+						if(this.nowPage<=3){	
+						this.midNum = 3;
+					}else if(this.nowPage>=this.msg-3){
+						this.midNum =this.msg-3; 
+					}
+	 */
+</script>
+</html>
