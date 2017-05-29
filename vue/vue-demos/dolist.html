@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>todoList</title>  
+	<script src="./vue.min.js"></script>
+	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+	<script src="https://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<link href="https://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">	
+</head>
+<style>
+	.btnCls{background: #444;color: #fff;}
+	.textCenter{text-decoration: line-through;}
+</style>
+<body>
+	<div class="app">
+		<div class="container">
+			<h1>todoList</h1>
+			<input type="text" class="form-control" @keydown.enter="add" v-model="inputData">
+			<ul v-for="(item,index) in lists" class="list-group" :style="{marginTop:10+'px'}">
+				<li class="list-group-item" :class="{textCenter:item.completed}">
+					<button class="btn btn-default" v-text="index+1" @click="item.completed=!item.completed"></button>
+					{{item.id}}&nbsp&nbsp{{item.completed}}
+					<button type="button" class="close" @click="remove(index)"><span aria-hidden="true">&times;</span></button>
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
+<script>
+	//添加localestorage
+	 	new Vue({
+		el: ".app", 
+		data: {
+			lists: [],
+			inputData:""
+		},
+		methods: {
+			add: function(){
+				if(this.inputData!=""){
+					this.lists.push({
+						id:this.inputData,
+						completed:false
+					});
+					this.inputData ="";
+				}
+			},
+			remove: function(index){
+				this.lists.splice(index,1);
+			}
+		}
+	});
+</script>
+</html>

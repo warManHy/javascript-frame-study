@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>日历</title>
+	<script src="./vue.min.js"></script>
+	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+	<script src="https://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<link href="https://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">	
+</head>
+<style>
+	.select{color:#fff;background:#428bca;}
+	li{width: 13%;}
+</style>
+<body>
+	<div class="center-block" style="width:800px;">
+		<calendar></calendar>
+	</div>
+</body>
+<script type="text/x-template" id="calendar">
+	<div>
+		<span>{{getToday()}}</span>
+		<h1>{{title}}</h1>
+		<h2>当前日期:<span id="now">{{d}}</span></h2>
+		<h3>月份{{month}},nowdate{{nowDate}},星期{{day}},年份{{year}},该月有几天:{{allday}}</h3>
+
+		<div class="text-center">
+			<h2>
+				月份:{{month}}
+			</h2>
+		</div>
+		<!-- 星期 -->
+		<ul class="table-bordered bg-success col-md-12">
+			<li :class='[{select:day==7},"btn"]'>日</li>
+			<li :class='[{select:day==1},"btn"]'>一</li>
+			<li :class='[{select:day==2},"btn"]'>二</li>
+			<li :class='[{select:day==3},"btn"]'>三</li>
+			<li :class='[{select:day==4},"btn"]'>四</li>
+			<li :class='[{select:day==5},"btn"]'>五</li>
+			<li :class='[{select:day==6},"btn"]'>六</li>
+		</ul>
+		<!-- 天数 -->
+		<ul class="table-bordered bg-default col-md-12">
+			<template v-for="item in allday" >
+				<li v-if="item<=day" :class="['btn',{select:item==nowDate}]"></li>
+				<li :class="['btn',{select:item==nowDate}]">{{item}}</li>
+			</template>
+		</ul>
+	</div>
+</script>
+<script>
+	// http://www.tuicool.com/articles/vmaiei2
+	var calendar = {
+		template:"#calendar",
+		data: function(){
+			return {
+				title:"这是一个日历",
+				d: new Date().toLocaleString(),
+				date: new Date(),
+				month: 1,
+				day: 1,
+				year: 1979,
+				nowDate: 1,
+				allday: 30
+			}
+		},
+		methods:{
+			getToday: function(){
+				this.month = this.date.getMonth()+1;
+				//this.month = this.date.getMonth()+1;
+				this.day = this.date.getDay();
+				this.year= this.date.getFullYear();
+				this.nowDate = this.date.getDate();
+				this.allday = new Date(this.year,this.month,0).getDate();
+
+				setInterval(function(){
+					this.d = new Date().toLocaleString()
+					now.innerHTML = this.d;
+				  	//console.log(	new Date().toLocaleString() )
+				  	//console.log(this.d)
+				},1000);
+			},			
+		}
+	};
+	new Vue({
+		el: ".center-block",
+		components:{
+			"calendar": calendar
+		}
+	});
+	//dom操作在vue渲染后
+	var now = document.getElementById('now');
+</script>
+</html>

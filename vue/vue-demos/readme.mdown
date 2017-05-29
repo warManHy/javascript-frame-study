@@ -1,0 +1,4 @@
+# 基于vuejs的demo
+
+	pageGo1： 分页组件未写完
+	calendar: 有明显bug，设计出错

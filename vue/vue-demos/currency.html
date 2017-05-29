@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>currency</title>
+	<script src="./vue.min.js"></script>
+	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+	<script src="https://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<link href="https://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">	
+</head>
+<style>
+	p{cursor: pointer;height: 100%;}
+</style>
+<body>
+	<div class="container text-center">
+			<li  class="list-group-item" v-for="(item,index) in services"  @click="toggle(item)">
+				<p class="btn-default btn" :class="{ 'btn-success':item.active}">
+					<span>{{item.name}}</span><span>{{item.price}}</span>
+				</p>
+				{{item.active}}
+			</li>
+		<div class="total">toal:{{total() }}</div>
+	</div>
+</body>
+<script>
+	new Vue({
+		el: ".container",
+		data: {
+			services: [
+        	{
+        		name: 'Web Development',
+        		price: 300,
+        		active:true
+        	},{
+        		name: 'Design',
+        		price: 400,
+        		active:false
+        	},{
+        		name: 'Integration',
+        		price: 250,
+        		active:false
+        	},{
+        		name: 'Training',
+        		price: 220,
+        		active:false
+        	}
+        ]
+		},
+		methods: {
+			toggle: function(s){
+				return s.active = !s.active;
+			},
+			total: function(){
+
+	        	var total = 0;
+	        	//循环判断状态，为true计算出和
+	        	this.services.forEach(function(s){
+	        		if (s.active){
+	        			total+= s.price;
+	        		}
+	        	});
+
+	    	   return total;
+			}
+		}
+	});
+</script>
+</html>
